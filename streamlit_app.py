@@ -420,11 +420,11 @@ def exibir_pagina_inicial():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("Termos Disponíveis", "50+")
+        st.metric("Termos Disponíveis", "41")
     with col2:
         st.metric("Áreas do Direito", "9")
     with col3:
-        st.metric("Fontes", "APIs")
+        st.metric("Fontes", "4")
     with col4:
         st.metric("Atualização", "Contínua")
     
@@ -590,49 +590,34 @@ def exibir_pagina_noticias():
 
 def exibir_pagina_sobre():
     st.markdown("### ℹ️ Sobre o Projeto")
-    
     st.write("""
     **Glossário Jurídico: Descomplicando o Direito**
     
-    ### 👥 Integrantes do Projeto
+    **Desenvolvido por:** Carolina Souza, Lara Carneiro e Mayra Rizkalla
+    **Turma A** - Projeto P2 Programação
     
-    **Desenvolvimento:**
-    - [Seu Nome] - Desenvolvedor Full Stack
-    - [Nome do Colega] - Especialista em Direito
-    - [Nome do Colega] - Designer UX/UI
+    **🎯 Objetivos:**
+    - Fornecer definições claras de termos jurídicos via APIs
+    - Contextualizar conceitos com exemplos práticos
+    - Integrar notícias em tempo real dos principais portais
+    - Oferecer ferramenta de estudo gratuita
     
-    **Orientação:**
-    - [Nome do Professor] - Orientador
-    - [Nome do Coordenador] - Coordenação
+    **⚙️ Tecnologias:**
+    - Streamlit para interface web
+    - Python como linguagem principal
     
-    ### 🎯 Objetivos
+    **📞 Fontes Oficiais:**
+    - STF (Supremo Tribunal Federal)
+    - STJ (Superior Tribunal de Justiça)
+    - Câmara dos Deputados
+    - Base de dados do Planalto
     
-    Este projeto tem como objetivo principal descomplicar o acesso à informação jurídica, 
-    fornecendo definições claras e atualizadas de termos do direito, além de notícias 
-    relacionadas aos termos pesquisados.
-    
-    ### ⚙️ Funcionalidades
-    
-    - **Definições**: Busca em tempo real em diversas fontes confiáveis
-    - **Notícias**: Encontra notícias recentes relacionadas aos termos jurídicos
-    - **Exploração**: Navegação por áreas específicas do direito
-    - **Interface**: Design intuitivo e responsivo
-    
-    ### 📊 Tecnologias Utilizadas
-    
-    - **Frontend**: Streamlit
-    - **APIs**: Wikipedia, Dicio, Significado
-    - **Fontes de Notícias**: Google News, portais jurídicos
-    - **Deploy**: Streamlit Cloud
-    
-    ### 📞 Contato
-    
-    Para mais informações sobre o projeto, entre em contato através do email:
-    **projeto.glossariojuridico@exemplo.com**
-    
-    ---
-    
-    *Projeto desenvolvido para fins educacionais*
+    **📊 Estatísticas:**
+    - 41 termos jurídicos essenciais
+    - 8 áreas do direito contempladas
+    - 4 fontes oficiais consultadas
+    - Interface moderna e responsiva
+    - Notícias atualizadas para todos os termos
     """)
 
 # App principal
