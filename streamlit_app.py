@@ -614,7 +614,7 @@ def exibir_pagina_sobre():
     
     **📊 Estatísticas:**
     - +1000 termos jurídicos essenciais
-    - 8 áreas do direito contempladas
+    - 9 áreas do direito contempladas
     - 4 fontes oficiais consultadas
     - Interface moderna e responsiva
     - Notícias atualizadas para todos os termos
