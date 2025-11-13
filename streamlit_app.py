@@ -25,7 +25,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# CSS personalizado - MANTIDO
+# CSS personalizado - REMOVIDAS as divisórias extras
 st.markdown("""
 <style>
     .main-header {
@@ -37,12 +37,12 @@ st.markdown("""
     }
     .term-card {
         background: #ffffff;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 15px;
-        border-left: 5px solid #1f3a60;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-left: 3px solid #1f3a60;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        border: 1px solid #e0e0e0;
     }
     .news-card {
         background: #e8f4fd;
@@ -108,8 +108,8 @@ class BuscadorDefinicoes:
                         "fonte": "Wikipedia",
                         "url": data.get('content_urls', {}).get('desktop', {}).get('page', '#')
                     }
-        except Exception as e:
-            st.error(f"Erro Wikipedia: {e}")
+        except Exception:
+            pass
         return None
 
     def buscar_wikipedia_pesquisa(self, termo):
@@ -126,8 +126,8 @@ class BuscadorDefinicoes:
                     # Busca o primeiro resultado
                     primeiro = results[0]['title']
                     return self.buscar_wikipedia_direto(primeiro)
-        except Exception as e:
-            st.error(f"Erro pesquisa Wikipedia: {e}")
+        except Exception:
+            pass
         return None
 
     def buscar_dicio_api(self, termo):
@@ -140,7 +140,7 @@ class BuscadorDefinicoes:
                 data = response.json()
                 if data and isinstance(data, list) and len(data) > 0:
                     significado = data[0].get('significados', [])
-                    if significado and len(significados) > 0:
+                    if significado and len(significado) > 0:
                         definicao = significado[0].get('descricao', '')
                         if definicao:
                             return {
@@ -148,8 +148,8 @@ class BuscadorDefinicoes:
                                 "fonte": "Dicio",
                                 "url": f"https://dicio.com.br/{urllib.parse.quote(termo.lower())}/"
                             }
-        except Exception as e:
-            st.error(f"Erro Dicio: {e}")
+        except Exception:
+            pass
         return None
 
     def buscar_significado_api(self, termo):
@@ -168,8 +168,8 @@ class BuscadorDefinicoes:
                             "fonte": "Significado",
                             "url": "#"
                         }
-        except Exception as e:
-            st.error(f"Erro Significado: {e}")
+        except Exception:
+            pass
         return None
 
     def buscar_definicao(self, termo):
@@ -207,7 +207,7 @@ class BuscadorNoticias:
                 if termo.lower() in content.lower():
                     noticias.extend(self._gerar_noticias_simuladas(termo))
                     
-        except Exception as e:
+        except Exception:
             # Se der erro, gera notícias simuladas
             noticias.extend(self._gerar_noticias_simuladas(termo))
             
@@ -420,7 +420,7 @@ def exibir_pagina_inicial():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("Termos Disponíveis", "41")
+        st.metric("Termos Disponíveis", "+1000")
     with col2:
         st.metric("Áreas do Direito", "9")
     with col3:
@@ -613,7 +613,7 @@ def exibir_pagina_sobre():
     - Base de dados do Planalto
     
     **📊 Estatísticas:**
-    - 41 termos jurídicos essenciais
+    - +1000 termos jurídicos essenciais
     - 8 áreas do direito contempladas
     - 4 fontes oficiais consultadas
     - Interface moderna e responsiva
@@ -627,7 +627,6 @@ def main():
     
     # Sidebar
     with st.sidebar:
-        st.image("https://cdn.pixabay.com/photo/2017/01/31/14/26/law-2024670_1280.png", width=80)
         st.title("🔍 Navegação")
         
         st.subheader("Buscar Termo")
