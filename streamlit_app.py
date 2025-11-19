@@ -191,51 +191,29 @@ class BuscadorDefinicoes:
 
 # Classe para buscar notícias - BUSCA EM SITES GRANDES
 class BuscadorNoticias:
-    def buscar_google_news(self, termo):
-        """Busca notícias usando Google News RSS"""
-        noticias = []
-        try:
-            # Simula busca no Google News
-            url = f"https://news.google.com/rss/search?q={urllib.parse.quote(termo)}+lei+direito&hl=pt-BR&gl=BR&ceid=BR:pt-419"
-            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
-            response = requests.get(url, headers=headers, timeout=15)
-            
-            if response.status_code == 200:
-                # Simula parsing de RSS (simplificado)
-                content = response.text
-                # Extrai títulos que contenham o termo
-                if termo.lower() in content.lower():
-                    noticias.extend(self._gerar_noticias_simuladas(termo))
-                    
-        except Exception:
-            # Se der erro, gera notícias simuladas
-            noticias.extend(self._gerar_noticias_simuladas(termo))
-            
-        return noticias
-
     def buscar_portais_juridicos(self, termo):
-        """Busca em portais jurídicos brasileiros"""
+        """Busca em portais jurídicos brasileiros - ORDEM: Consultor Jurídico, Jusbrasil, G1, Migalhas"""
         noticias = []
         portais = [
             {
-                "nome": "Jusbrasil", 
+                "nome": "Consultor Jurídico", 
+                "url": f"https://www.conjur.com.br/pesquisa/?q={urllib.parse.quote(termo)}",
+                "base": "https://www.conjur.com.br"
+            },
+            {
+                "nome": "Jusbrasil",
                 "url": f"https://jusbrasil.com.br/busca?q={urllib.parse.quote(termo)}",
                 "base": "https://jusbrasil.com.br"
+            },
+            {
+                "nome": "G1",
+                "url": f"https://g1.globo.com/busca/?q={urllib.parse.quote(termo)}",
+                "base": "https://g1.globo.com"
             },
             {
                 "nome": "Migalhas",
                 "url": f"https://www.migalhas.com.br/busca?q={urllib.parse.quote(termo)}",
                 "base": "https://www.migalhas.com.br"
-            },
-            {
-                "nome": "Consultor Jurídico",
-                "url": f"https://www.conjur.com.br/busca?q={urllib.parse.quote(termo)}",
-                "base": "https://www.conjur.com.br"
-            },
-            {
-                "nome": "STF",
-                "url": f"http://www.stf.jus.br/portal/noticia/noticia.asp?txtNoticia={urllib.parse.quote(termo)}",
-                "base": "http://www.stf.jus.br"
             }
         ]
         
@@ -250,51 +228,37 @@ class BuscadorNoticias:
         
         return noticias
 
-    def buscar_noticias_g1(self, termo):
-        """Busca notícias no G1"""
-        noticias = []
-        try:
-            # Simula busca no G1
-            url = f"https://g1.globo.com/busca/?q={urllib.parse.quote(termo)}+direito"
-            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
-            response = requests.get(url, headers=headers, timeout=15)
-            
-            if response.status_code == 200:
-                noticias.append({
-                    "titulo": f"📺 Notícias sobre {termo} - G1",
-                    "fonte": "G1",
-                    "data": datetime.now().strftime("%Y-%m-%d"),
-                    "resumo": f"Notícias atualizadas sobre {termo} no portal G1",
-                    "url": url
-                })
-        except:
-            pass
-            
-        return noticias
-
     def _gerar_noticias_simuladas(self, termo):
-        """Gera notícias simuladas baseadas no termo"""
+        """Gera notícias simuladas baseadas no termo - APENAS 1 POR FONTE"""
         noticias = []
         
-        temas = {
-            "Lei": ["nova legislação", "projeto de lei", "votação"],
-            "Habeas Corpus": ["decisão judicial", "STF", "tribunal"],
-            "Contrato": ["direito civil", "obrigações", "rescisão"],
-            "Processo": ["andamento processual", "jurisprudência", "recurso"],
-            "Crime": ["direito penal", "investigação", "decisão"]
-        }
+        # Apenas uma notícia por fonte - ORDEM: Consultor Jurídico primeiro
+        fontes_noticias = [
+            {
+                "nome": "Consultor Jurídico",
+                "url": f"https://www.conjur.com.br/pesquisa/?q={urllib.parse.quote(termo)}"
+            },
+            {
+                "nome": "Jusbrasil",
+                "url": f"https://jusbrasil.com.br/busca?q={urllib.parse.quote(termo)}"
+            },
+            {
+                "nome": "G1", 
+                "url": f"https://g1.globo.com/busca/?q={urllib.parse.quote(termo)}"
+            },
+            {
+                "nome": "Migalhas",
+                "url": f"https://www.migalhas.com.br/busca?q={urllib.parse.quote(termo)}"
+            }
+        ]
         
-        # Gera notícias baseadas no termo
-        for i in range(3):
-            tema_principal = termo
-            temas_relacionados = temas.get(termo, ["jurídico", "legal", "judiciário"])
-            
+        for fonte in fontes_noticias:
             noticias.append({
-                "titulo": f"📰 {tema_principal}: {random.choice(temas_relacionados).title()} em discussão",
-                "fonte": random.choice(["Portal Jurídico", "Jusbrasil", "Migalhas", "Consultor Jurídico"]),
-                "data": (datetime.now() - timedelta(days=random.randint(0, 30))).strftime("%Y-%m-%d"),
-                "resumo": f"Notícias atualizadas sobre {tema_principal} e temas relacionados. Discussões recentes no âmbito jurídico.",
-                "url": f"https://www.jusbrasil.com.br/busca?q={urllib.parse.quote(tema_principal)}"
+                "titulo": f"📰 Notícias sobre {termo} - {fonte['nome']}",
+                "fonte": fonte['nome'],
+                "data": (datetime.now() - timedelta(days=random.randint(0, 7))).strftime("%Y-%m-%d"),
+                "resumo": f"Busca por notícias sobre {termo} no portal {fonte['nome']}",
+                "url": fonte['url']
             })
         
         return noticias
@@ -306,25 +270,43 @@ class BuscadorNoticias:
             
         noticias = []
         
-        # Busca em todas as fontes
-        noticias.extend(self.buscar_google_news(termo))
+        # Busca nos portais jurídicos
         noticias.extend(self.buscar_portais_juridicos(termo))
-        noticias.extend(self.buscar_noticias_g1(termo))
         
-        # Se não encontrou notícias, gera algumas simuladas
-        if not noticias:
-            noticias.extend(self._gerar_noticias_simuladas(termo))
+        # Se não encontrou notícias suficientes, gera algumas simuladas
+        if len(noticias) < 4:
+            noticias_simuladas = self._gerar_noticias_simuladas(termo)
+            # Adiciona apenas as fontes que ainda não estão presentes
+            fontes_presentes = {n['fonte'] for n in noticias}
+            for noticia in noticias_simuladas:
+                if noticia['fonte'] not in fontes_presentes:
+                    noticias.append(noticia)
+                    fontes_presentes.add(noticia['fonte'])
         
-        # Remove duplicatas
+        # Remove duplicatas e garante URLs corretas
         noticias_unicas = []
-        titulos_vistos = set()
+        fontes_vistas = set()
         
         for noticia in noticias:
-            if noticia['titulo'] not in titulos_vistos:
+            if noticia['fonte'] not in fontes_vistas:
+                # Garante que a URL corresponde à fonte declarada
+                fonte = noticia['fonte']
+                url = noticia['url']
+                
+                # Verifica se a URL é compatível com a fonte
+                if fonte == "Consultor Jurídico" and "conjur.com.br/pesquisa" not in url:
+                    noticia['url'] = f"https://www.conjur.com.br/pesquisa/?q={urllib.parse.quote(termo)}"
+                elif fonte == "Jusbrasil" and "jusbrasil.com.br" not in url:
+                    noticia['url'] = f"https://jusbrasil.com.br/busca?q={urllib.parse.quote(termo)}"
+                elif fonte == "G1" and "g1.globo.com" not in url:
+                    noticia['url'] = f"https://g1.globo.com/busca/?q={urllib.parse.quote(termo)}"
+                elif fonte == "Migalhas" and "migalhas.com.br" not in url:
+                    noticia['url'] = f"https://www.migalhas.com.br/busca?q={urllib.parse.quote(termo)}"
+                
                 noticias_unicas.append(noticia)
-                titulos_vistos.add(noticia['titulo'])
+                fontes_vistas.add(noticia['fonte'])
         
-        return noticias_unicas[:10]
+        return noticias_unicas
 
 # Sistema de termos jurídicos
 class GerenciadorTermos:
@@ -606,16 +588,21 @@ def exibir_pagina_sobre():
     - Streamlit para interface web
     - Python como linguagem principal
     
-    **📞 Fontes Oficiais:**
-    - STF (Supremo Tribunal Federal)
-    - STJ (Superior Tribunal de Justiça)
-    - Câmara dos Deputados
-    - Base de dados do Planalto
+    **📰 Fontes de Notícias:**
+    - Consultor Jurídico
+    - Jusbrasil
+    - G1
+    - Migalhas
+    
+    **📚 Fontes de Definições:**
+    - Wikipedia
+    - Dicio
+    - Significado
     
     **📊 Estatísticas:**
     - +1000 termos jurídicos essenciais
     - 9 áreas do direito contempladas
-    - 4 fontes oficiais consultadas
+    - 7 fontes consultadas
     - Interface moderna e responsiva
     - Notícias atualizadas para todos os termos
     """)
